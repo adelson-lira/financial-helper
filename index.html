@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Helper - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Financial Helper</h1>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="E-mail" required>
+            <input type="password" id="password" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+            <p class="forgot-password"><a href="#" id="forgotPasswordLink">Esqueci minha senha</a></p>
+            <p class="create-account"><a href="#" id="createAccountLink">Criar nova conta</a></p>
+        </form>
+    </div>
+
+    <div class="register-container" id="registerContainer" style="display: none;">
+        <h2>Criar Conta</h2>
+        <form id="registerForm">
+            <input type="text" id="name" placeholder="Nome completo" required>
+            <input type="email" id="newEmail" placeholder="E-mail" required>
+            <input type="password" id="newPassword" placeholder="Criar senha" required>
+            <input type="password" id="confirmPassword" placeholder="Confirmar senha" required>
+            <input type="text" id="groupId" placeholder="ID do Grupo (opcional)">
+            <small style="font-size: 12px; color: #555;">Deixe em branco para gerar um novo ID exclusivo. Compartilhe esse ID para acesso em grupo.</small>
+            <button type="submit">Cadastrar</button>
+            <p class="back-to-login"><a href="#" id="backToLogin">Voltar para o login</a></p>
+        </form>
+    </div>
+
+    <div class="recover-container" id="recoverContainer" style="display: none;">
+        <h2>Recuperar Senha</h2>
+        <form id="recoverForm">
+            <input type="email" id="recoverEmail" placeholder="Informe seu e-mail" required>
+            <button type="submit">Buscar Conta</button>
+        </form>
+
+        <div id="verificationStep" style="display: none;">
+            <p id="hintCode"></p>
+            <input type="text" id="codeInput" placeholder="Digite o código de verificação" required>
+            <input type="password" id="recoverNewPassword" placeholder="Nova senha" required>
+            <input type="password" id="recoverConfirmNewPassword" placeholder="Confirmar nova senha" required>
+            <button id="confirmRecovery">Redefinir Senha</button>
+        </div>
+
+        <p class="back-to-login"><a href="#" id="backToLoginFromRecovery">Voltar para o login</a></p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

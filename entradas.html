@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Entradas - Financial Helper</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <style>
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+		width: 220px;
+		background-color: #2c3e50;
+		color: white;
+		padding: 20px;
+		flex-shrink: 0;
+		height: 100vh;
+		position: fixed;
+		top: 0;
+		left: 0;
+		overflow-y: auto;
+	}
+
+    .main-content {
+      flex: 1;
+      padding: 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding-bottom: 60px;
+    }
+
+    form input,
+    form select {
+      margin-bottom: 10px;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .totals {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+
+    .totals div {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      width: 30%;
+      text-align: center;
+    }
+
+    .filters {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .table-container {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    th {
+      background-color: #eee;
+    }
+
+    td:nth-child(1) { max-width: 200px; }
+    td:nth-child(2) { max-width: 130px; }
+    td:nth-child(3) { max-width: 100px; }
+    td:nth-child(4) { max-width: 110px; }
+    td:nth-child(5) { max-width: 220px; }
+    td:nth-child(6) { white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Menu</h2>
+      <ul>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="entradas.html">Entradas</a></li>
+		<li><a href="saidas.html">Saídas</a></li>										  
+        <li><a href="contas.html">Contas Bancárias</a></li>
+        <li><a href="#" id="logoutBtn">Sair</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <h1>Entradas</h1>
+
+      <form id="entryForm">
+        <select id="account" required>
+          <option value="">Selecione a conta bancária</option>
+        </select>
+        <input type="number" id="initialBalance" placeholder="Saldo inicial">
+        <select id="entryType" required>
+          <option value="vazio"> </option>
+          <option value="saldo_inicial">Saldo inicial</option>
+          <option value="aplicacao">Aplicação</option>
+          <option value="salario">Salário</option>
+          <option value="transferencia">Transferência</option>
+          <option value="rendimento">Rendimento de aplicação</option>
+          <option value="outras">Outras entradas</option>
+        </select>
+        <input type="number" id="value" step="0.01" placeholder="Valor da entrada">
+        <input type="date" id="date" required>
+        <input type="text" id="description" placeholder="Descrição (opcional)">
+        <button type="submit">Adicionar entrada</button>
+        <button type="button" onclick="cancelEdit()" id="cancelEditBtn" style="display:none;">Cancelar edição</button>
+      </form>
+
+      <div class="totals">
+        <div><strong>Semana</strong><br><span id="weekTotal">R$ 0,00</span></div>
+        <div><strong>Quinzena</strong><br><span id="fortnightTotal">R$ 0,00</span></div>
+        <div><strong>Mês</strong><br><span id="monthTotal">R$ 0,00</span></div>
+      </div>
+
+      <h3>Filtrar por período</h3>
+
+      <div class="filters">
+        <label for="filterMode"><strong>Tipo de filtro:</strong></label>
+        <select id="filterMode" onchange="toggleFilterFields()">
+          <option value="">Selecione...</option>
+          <option value="quick">Botões rápidos</option>
+          <option value="custom">Data personalizada</option>
+        </select>
+      </div>
+
+      <div class="filters" id="quickFilters" style="display: none;">
+        <button type="button" onclick="applyQuickFilter('week')">Semana atual</button>
+        <button type="button" onclick="applyQuickFilter('fortnight')">Quinzena atual</button>
+        <button type="button" onclick="applyQuickFilter('month')">Mês atual</button>
+        <button type="button" onclick="applyQuickFilter('all')">Todos</button>
+      </div>
+
+      <div class="filters" id="customFilters" style="display: none;">
+        <label for="startDate">De:</label>
+        <input type="date" id="startDate">
+        <label for="endDate">Até:</label>
+        <input type="date" id="endDate">
+        <button type="button" onclick="applyCustomFilter()">Filtrar por datas</button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Conta</th>
+              <th>Tipo</th>
+              <th>Valor</th>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="entriesTableBody">
+            <!-- Linhas inseridas via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="entradas.js"></script>
+</body>
+</html>
